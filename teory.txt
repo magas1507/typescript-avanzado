@@ -1,0 +1,431 @@
+***TypeScript Avanzado
+
+  ***Enum
+
+    Enums
+      Los enums funcionan como listas en las que podemos agregar llaves y valores.
+      Esto lo que nos permite es tener un set de opciones predefinidas, evitando pasar un
+      argumento invalido, ya que solo vamos a tener las opciones dentro del enum.
+      Estos se usan de la siguiente manera:
+
+        enum ROLES {
+          ADMIN = "admin",
+          USER = "user",
+          OWNER = "owner"
+        }
+
+      Otras características de enum
+
+        Si en un enum las keys solo se declaran y no se inicializan con valores, estas se
+        inician automáticamente por defecto en orden númerico, empezando por el 0 y auto
+        incrementandose.
+
+        enum ENUM_NUMBER {
+          X,Y,Z
+        }
+
+        console.log(ENUM_NUMBER.X) // 0
+        console.log(ENUM_NUMBER.Y) // 1
+        console.log(ENUM_NUMBER.Z) // 2
+
+
+        También es posible inicializar manualmente una key y sus atributos se incrementaran
+        a partir de este valor
+
+        enum ENUM_NUMBER {
+          X = 1,
+          Y,
+          Z
+        }
+
+        console.log(ENUM_NUMBER.X) // 1
+        console.log(ENUM_NUMBER.Y) // 2
+        console.log(ENUM_NUMBER.Z) // 3
+
+  ***Tuplas
+
+      Las tuplas usualmente podemos tender a decir que son iguales a los tipos types si bien
+      son “parecidas” no son iguales.
+
+      Ya que al definir un tipo, estamos definiendo los tipos que recibe esa variable, y al
+      definir una tupla estamos definiendo el tipo que recibe un array justamente en la
+      posición que lo estamos definiendo
+
+      //Ejemplo al escribir un tipo
+      const array1: (string | number)[] = [1, 2, 3, 'uno', 'dos', 'tres']
+
+      //Ejemplo al definir una tupla
+
+      const array2: [string, number] = [1, 'dos']
+
+      // aqui nos daría error ya que al definir la tupla en array dos le indicamos que
+      // el primer elemento es un string, y el segundo es un number.
+      const array3: [number, number, number, string, string, string] = [1, 2, 3, 'uno', 'dos', 'tres']
+      // Ahora si estaríamos definiendo bien la tupla, ya que le indicamos que en cada
+      espacio del array, va a recibir un dato en particular
+
+    Destructuring de tuplas
+      Las tuplas también se pueden destructurar, al igual como estamos definiendo el tipo de
+      dato que va a tener ese array en ese espacio, podemos destructurarla por ejemplo
+
+    '    // creamos el tipo
+        type User = string | number, boolean
+        // creamos la variable, le asignamos el tipo y agregamos los datos del array
+        const user:User = ['jose', 12, true]
+        // destructuramos una tupla
+        const [userName, age] = user
+        console.log(userName, '<-- datos del userName')
+        console.log(age, '<--- datos de la edad')
+***Unknown type
+
+  Este tipo de dato es la mejora de any, ya que nos da la flexibilidad que en ocasiones
+  queremos pero sin apagar por completo el análisis de código estático.
+
+  Unknown nos fuerza a hacer una verificación de tipo.'
+
+  Les comparto mis apuntes. 😄
+
+  ¿Qué hace?
+    Este nos dice que la variable es desconocida, es similar a any, pero es la forma
+    recomendable de trabajar para evitar any en los casos que sean necesarios.
+
+  Diferencias con any
+    Con any podemos hacer lo que queramos, no hay restricción alguna,
+    pero con unknown vamos a tener advertencias al momento de usar alguna función o
+    método con variables de tipo unknown.
+
+    Para poder pasar las advertencias tenemos que usar un filtro o realizar una verificación,
+    una estructura condicional, para poder hacer lo que queremos con esa variable.
+
+  Recomendación
+    Utilizar unknown siempre por sobre any, pero solo en caso de que sea necesario.
+
+    functionstringifyForLogging(value: unknown): string{
+    if (typeof value === "function") {
+      // Within this branch, `value` has type `Function`,
+      // so we can access the function's `name` property
+      const functionName = value.name || "(anonymous)";
+      return`[function ${functionName}]`;
+    }
+
+    if (value instanceofDate) {
+      // Within this branch, `value` has type `Date`,
+      // so we can call the `toISOString` method
+      return value.toISOString();
+    }
+
+    returnString(value);
+  }
+
+
+***Never Type
+
+    El tipo de dato never, más que todo sirve para tipar a una función que nunca va a finalizar o sencillamente
+    que pueda terminar el programa en el caso de lanar una excepción.
+
+    Un ejemplo de ello es cuando queremos manejar un error o cuando ejecutamos un loop infinito, como por
+    ejemplo una validación de un token de cada x’s segundos, que es una función que se ejecuta constantemente,
+     ya que lanzas la función, esta envía el token lo valida, y comienza el timer para hacer el refresh de ese
+     token, si hay un error lanza una excepción y si no continúa con la validación y el timer…
+
+    // esta funcion no tiene un punto final ya que dispara una excepcion
+    function error(mensaje: string): never {
+        throw new Error(mensaje);
+    }
+
+    // esta funcion no tiene un punto final ya que dispara un error
+    function fallo(): never {
+        return error("Reportar fallo");
+    }
+
+    // esta funcion no finaliza ya que posee un loop infinito
+    function loopInfinito() : never {
+        while(true){}
+    }```
+***Parámetros opcionales Estos son los últimos en ir declarados.
+  Si no usamos o asignamos ese parámetro, tendrá por defecto el valor de undefined.
+    function functionName (
+      parameter1: dataType,
+      parameter2?: dataType,
+    ) {
+      statements
+    }
+    Valores predeterminado de parámetros
+    function functionName (
+      parameter1: dataType,
+      parameter2: dataType = value,
+    ) {
+      statements
+    }
+***Nullish coalescing operator (??) VS logical OR operator (||)
+    La gran diferencia entre estos dos es que el logical OR operator (||) toma como
+    valores falsos a 0, NaN, strings vacíos ("", '', ``), false, a demás de null
+    y undefined, mientras que nullsh coalescing operator tomo como valores falso
+    solamente a null y undefined.
+
+    En el caso de las funciones, se ejecuta la misma, se realizan todos los cálculos que
+    tienen que hacer, pero ambos operadadores ?? y || únicamente se fijan en lo que
+    retorna dichas funciones.
+
+    Fuentes:
+
+    Nullish coalescing operator (??)
+
+    Logical OR operator (||)
+
+***Establecer  parámetros por defecto de una función en TypeScript #
+    Use un signo igual justo después del nombre del parámetro para establecer un valor
+    predeterminado para un parámetro de función.
+
+    Si no se proporciona un valor para el parámetro, el argumento se reemplazará con el
+    valor predeterminado.
+
+    índice.ts
+
+    function multiply(num: number, by = 10) {
+      return num * by;
+    }
+
+    console.log(multiply(10)); // 👉️ 100
+    console.log(multiply(5, 20)); // 👉️ 100
+
+    Si necesita establecer un valor predeterminado para un parámetro de objeto,
+     haga clic en el siguiente subtítulo:
+
+    Establecer el valor predeterminado para un parámetro de objeto en TypeScript #
+
+      Para establecer un valor predeterminado para un parámetro de objeto:
+
+      Escriba el objeto para que tenga una o más propiedades opcionales.
+      Establezca un valor predeterminado para cada una de las propiedades opcionales.
+      Como alternativa, establezca todo el objeto como opcional estableciendo todas sus
+      propiedades como opcionales.
+      índice.ts
+
+      type Person = {
+        name?: string;
+        age: number;
+      };
+
+      function getPerson({ name = 'Bobby', age }: Person) {
+        console.log(name);
+        console.log(age);
+      }
+
+      getPerson({ age: 30 }); // 👉️ Bobby, 30
+
+***Qué es parámetros rest? 9
+  Se apoya en la flexibilidad que tenemos en JavaScript de enviar parámetros sin ningún
+  problema, que no tienen un fin.
+
+  Rest parameters nos permite mandar un conjunto de argumentos a nuestra función y ella
+  los recibe como un arreglo.
+
+  Spread operator
+  A demás de usarlo en poder copiar objetos, también podemos usarlo para poder recibir N
+  parámetros en una función, además vamos a recibir esos parámetros como un array de
+  argumentos.
+
+  Sintaxis en JavaScript
+    function functionName (...parameters) {
+      statements
+    }
+
+  Sintaxis en TypeScript
+    function functionName (...parameters: dataType[]) {
+      statements
+    }
+
+***Sobrecarga de funciones: el problema 10
+
+  Problema con el retorno de funciones
+  Cuando tenemos una función que retorna más de un solo tipo de dato y a ese resultado
+  lo queremos utilizar en otra parte de nuestro programa, no vamos a poder usarlo como tal,
+  ya que TypeScript no sabe que tipo de dato se retornó realmente.
+
+  TypeScript al no saber el tipo de dato que se retornó en una función que puede retornar
+  más de un tipo de dato, somos nosotros los responsables en decirle el tipo de dato
+  resultante de la función para así poder operar con el resultado de forma normal.
+
+  Uso de la sobrecarga de funciones
+
+  Se suele emplear mucho en librerías, pero depende mucho de tu proyecto y de las
+  ventajas que te puede llegar a dar.
+
+  La sobre carga de funciones únicamente suelen darse con las funciones declarativas
+  con la palabra reservada function.
+
+*** Sobrecarga de funciones: la solución 11
+
+    *Uso de sobrecarga de funciones
+
+      Para realizar la sobrecarga de funciones tenemos simplemente declarar otras
+      funciones con el mismo nombre de la función que tiene la lógica implementada.
+      Dentro de los parámetros de las nuevas funciones vamos a definir el tipo de dato
+      que se va a recibir y además tenemos que aclarar el tipo de dato que se va a
+      retornar con ese parámetro.
+
+      Además, en la función que tiene toda la lógica a sus parámetros podemos colocarle
+      como tipo de dato unknown al igual que su retorno.
+
+    Sintaxis
+
+      function functionName (parameter: dataType): dataTypeReturn;
+      function functionName (parameter: dataType): dataType {
+        statements
+      }
+
+    Buenas prácticas
+      Cuando tengamos sobre carga de métodos y por alguna razón tengamos un unknown o any,
+      en esa sobre carga, lo mejor es dejar ese unknowno any al final. Caso contario no
+      uncionará correctamente esa aserción de tipos y por ende el autocompletado del editor.
+
+      1.png
+
+       Evaluar si realmente se necesita una sobre carga o simplemente puedes buscar otra
+       forma de hacerlo como ser usando valores opcionales.
+
+      2.png
+      3.png
+      4.png
+      5.png
+
+    Código de la clase
+      // Galeed -> ['G', 'a', 'l', 'e', 'e', 'd']
+      // ['G', 'a', 'l', 'e', 'e', 'd'] -> Galeed
+      // number -> boolean
+
+      function parseStr (input: string): string[];
+
+      function parseStr (input: string[]): string;
+
+      function parseStr (input: number): boolean;
+
+      function parseStr (input: unknown): unknown {
+          if (Array.isArray(input)) return input.join(''); // string
+          if (typeof(input) === 'string') return input.split(''); // string[]
+          if (typeof(input) === 'number') return true; // boolean
+      }
+
+      const rtaArray = parseStr('Galeed');
+
+      rtaArray.reverse();
+
+      const rtaString = parseStr(['G', 'a', 'l', 'e', 'e', 'd']);
+
+      const rtaNumber = parseStr(1);
+      console.log('rtaArray: Galeed -> ', rtaArray);
+      console.log("rtaString: ['G', 'a', 'l', 'e', 'e', 'd'] -> ", rtaString);
+      console.log("rtaNumber: number -> ", rtaNumber);
+
+***Interfaces en TS 12
+
+    Las interfaces funcionan muy similar a como lo hace type, pero en las interfaces
+    solo aplica para los objetos
+
+    type Size = "S" | "M" | "L";
+    type User = {
+      id: string,
+      name: string
+    }
+    interface UserInterface {
+      id: string,
+      name: string
+    }
+    ¿Entonces, porque usar interfaces si puedo usar type?
+
+    La razón es sencilla, con las interfaces podemos heredar otras interfaces, y
+    con los type no podemos hacer eso.
+
+    interface HumanInterface {
+      name: string,
+      lastName: string
+    }
+    interface HeroInterface extends HumanInterface {
+      superPower: string
+    }
+
+  Diferencias entre type e interface
+
+    -Con type yo puedo definir tipos primitivos o directos (declaraciones cortas y puntuales),
+    mientras que una interface necesita todo un cuerpo.
+    -A interface lo usamos para un conjunto de atributos de valores.
+   - Interface tiene la particularidad de que se puede extender, mientras que los type no.
+
+  DIFERENCIAS ENTRE INTERFACES Y CLASES
+
+    -Una clase, es un template que contiene métodos, variables… el esqueleto de un 
+    objeto.
+
+    -Una interfaz, es un “blueprint” ó plano que describe que propiedades debe tener
+    el objeto.
+
+    -Una clase te permite inicializar nuevos objetos, una interfaz no.
+
+    ¿Cuándo usar interfacez?
+
+    cuando necesites crear un “contrato” de las propiedades y funciones que un 
+    objeto debe tener. 
+    Son muy útiles cuando el mismo objeto se debe repetir en varios archivos
+    diferentes. Prácticamente, se utilizan para tipar nuestro código.
+
+    ¿Cuando usar clases?
+
+    Cuando quieras crear objetos que tengan una función real en el código
+    (más allá de solo tipar nuestras variables). Cuando necesites usar un 
+    constructor
+    para inicializar el objeto y que tenga default values, ó cuando requieras
+    crear nuevas instancias de eso objeto (con la palabra “new”).
+
+***Omit y Pick Type 17
+
+  Omit y Pick Type son utilty types en TypeScript.
+
+    DTOs
+      Es una abreviatura para referirnos a Data Transfer Objects u Objeto de
+      Transferencias de datos.
+
+      Hay momentos particulares en los que nosotros no necesitamos del todo los tipos,
+      es decir, hay parámetros que no hacen falta, por ejemplo, mandarlos al momento de
+      la creación de un objeto, ya que estos son automáticos como el ID o la fecha de
+      creación.
+
+    1.png
+      Así que podemos omitir algunos parámetros o campos que en ese particular
+      momento no hacen falta, esto no significa que no están el objeto,
+      sino que al momento de la creación solo necesitamos ciertos parámetros y la API,
+      la base de datos se encargará de insertar lo demás.
+
+    2.png
+    Omit
+      Con omit podemos omitir las propiedades, campos o llaves que quieramos.
+
+      Sintaxis
+      interface InterfaceName extends Omit<TypeOrInterface, keyToOmit1 | ... | keyToOmitN> {
+        statements
+      }
+
+        type typeNameDto = Omit<TypeOrInterface, keyToOmit1 | ... | keyToOmitN>
+    
+    Pick
+       
+       Es lo contrario de Omit, aquí yo elijo los campos que quiero que estén en 
+       mi type o interface.
+
+      Sintaxis
+      interface InterfaceName extends Pick<TypeOrInterface, keyToPick1 | ... | keyToPickN> {
+        statements
+      }
+
+     type typeNameDto = Pick<TypeOrInterface, keyToPick1 | ... | keyToPickN>
+    
+    Buenas prácticas
+     Una buena práctica es que los DTOs tengan su propio archivo.
+
+    Pequeña aclaración sobre nuestro código en esta clase
+    
+      En el caso de las categorías en los productos, cuando creamos un producto 
+      no es que creamos una categoría a la vez, esta ya viene creada y solo la 
+      relacionamos, tenemos que mandar solamente el ID de la categoría a la que está 
+      relacionado el producto.
+
